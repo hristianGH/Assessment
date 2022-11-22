@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Coursera_ViewModel.Responses
+﻿namespace Coursera_ViewModel.Responses
 {
     public class CourseResponse
     {

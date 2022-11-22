@@ -1,5 +1,4 @@
-﻿using Coursera_Data;
-using Coursera_Service.Interfaces;
+﻿using Coursera_Service.Interfaces;
 using Coursera_ViewModel.Responses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +20,7 @@ namespace Coursera_Api.Controllers
         [HttpGet]
         public async Task<List<CourseraResponse>> Get()
         {
-            var response = await _coursera.ReturnReport(0,new DateOnly(),new DateOnly(),"test","");
+            var response = await _coursera.ReturnReport(0, new DateOnly(), new DateOnly(), "test", "");
             return response;
         }
 

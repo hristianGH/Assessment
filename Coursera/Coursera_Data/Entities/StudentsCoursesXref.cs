@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Coursera_Data.Entities;
+﻿namespace Coursera_Data.Entities;
 
 public partial class StudentsCoursesXref
 {
