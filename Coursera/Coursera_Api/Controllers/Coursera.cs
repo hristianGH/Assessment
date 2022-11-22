@@ -1,4 +1,6 @@
 ﻿using Coursera_Data;
+using Coursera_Service.Interfaces;
+using Coursera_ViewModel.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,17 +11,18 @@ namespace Coursera_Api.Controllers
     [ApiController]
     public class Coursera : ControllerBase
     {
-        private readonly CourseraContext _dbContext;
+        private readonly ICourseraService _coursera;
 
-        public Coursera(CourseraContext dbContext)
+        public Coursera(ICourseraService coursera)
         {
-            _dbContext = dbContext;
+            _coursera = coursera;
         }
         // GET: api/<Coursera>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<List<CourseraResponse>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var response = await _coursera.ReturnReport(0,new DateOnly(),new DateOnly(),"test","");
+            return response;
         }
 
         // GET api/<Coursera>/5

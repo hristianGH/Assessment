@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Coursera_Data\Coursera_Data.csproj" />
+    <ProjectReference Include="..\Coursera_Service\Coursera_Service.csproj" />
   </ItemGroup>
 
 </Project>

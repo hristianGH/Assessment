@@ -1,4 +1,6 @@
 using Coursera_Data;
+using Coursera_Service;
+using Coursera_Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,9 +13,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CourseraContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<ICourseraService, CourseraService>();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
