@@ -33,13 +33,17 @@ namespace Coursera_Service
             foreach (var student in students)
             {
                 var courses = await GetCoursesByStudentPIN(student.Pin);
-                var entity = new CourseraResponse()
+                var totalCredit = GetCoursesTotalCredit(courses);
+                if (totalCredit<minCredit)
                 {
-                    StudentName = $"{student.FirstName} {student.LastName}",
-                    Courses = courses,
-                    TotalCredit = GetCoursesTotalCredit(courses),
-                };
-                response.Add(entity);
+                    var entity = new CourseraResponse()
+                    {
+                        StudentName = $"{student.FirstName} {student.LastName}",
+                        Courses = courses,
+                        TotalCredit = GetCoursesTotalCredit(courses),
+                    };
+                    response.Add(entity);
+                }
             }
             await WriteToFile(response);
             return response;

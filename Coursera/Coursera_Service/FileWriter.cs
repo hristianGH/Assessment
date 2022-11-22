@@ -25,7 +25,6 @@ namespace Coursera_Service
             {
                 builder.AppendFormat("<html><table><tr> </tr> </table> </html>");
             }
-            using (var writer = new StreamWriter($"report.html")) ;
           
         }
     }
