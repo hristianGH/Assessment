@@ -2,16 +2,19 @@
 using Coursera_Service.Interfaces;
 using Coursera_ViewModel.Responses;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace Coursera_Service
 {
     public class ReportService : IReportService
     {
         private readonly CourseraContext _dbContext;
+        private readonly IFileWriter _fileWriter;
 
-        public ReportService(CourseraContext dbContext)
+        public ReportService(CourseraContext dbContext, IFileWriter fileWriter)
         {
             _dbContext = dbContext;
+            _fileWriter = fileWriter;
         }
         public async Task<List<CourseraResponse>> ReturnReport(int minCredit, DateTime startDate, DateTime endDate, string directory, string? outputFormat, params string[]? pins)
         {
@@ -20,9 +23,10 @@ namespace Coursera_Service
                 .ThenInclude(x => x.Course)
                 .ThenInclude(x => x.Instructor)
                 .ToListAsync();
-            if (pins.Any())
+
+            if (pins != null)
             {
-                students = students.Where(s =>pins.Any(x=>x == s.Pin)).ToList();
+                students = students.Where(s => pins.Any(x => x == s.Pin)).ToList();
             }
 
             var response = new List<CourseraResponse>();
@@ -37,8 +41,10 @@ namespace Coursera_Service
                 };
                 response.Add(entity);
             }
+            await WriteToFile(response);
             return response;
         }
+
         private async Task<List<CourseResponse>> GetCoursesByStudentPIN(string pin)
         {
             var data = await _dbContext.Courses
@@ -64,6 +70,10 @@ namespace Coursera_Service
         {
             var response = courses.Select(x => x.Credit).Sum();
             return response;
+        }
+        private async Task WriteToFile(List<CourseraResponse> data)
+        {
+            await _fileWriter.WriteCSV(data);
         }
     }
 }

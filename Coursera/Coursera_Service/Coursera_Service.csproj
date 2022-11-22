@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Coursera_Data\Coursera_Data.csproj" />
     <ProjectReference Include="..\Coursera_ViewModel\Coursera_ViewModel.csproj" />
   </ItemGroup>

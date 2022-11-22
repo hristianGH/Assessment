@@ -15,6 +15,8 @@ builder.Services.AddDbContext<CourseraContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IFileWriter, FileWriter>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
