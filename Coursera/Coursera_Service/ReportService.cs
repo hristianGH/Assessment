@@ -5,32 +5,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coursera_Service
 {
-    public class CourseraService : ICourseraService
+    public class ReportService : IReportService
     {
         private readonly CourseraContext _dbContext;
 
-        public CourseraService(CourseraContext dbContext)
+        public ReportService(CourseraContext dbContext)
         {
             _dbContext = dbContext;
         }
-        public async Task<List<CourseraResponse>> ReturnReport(int minCredit, DateOnly startDate, DateOnly endDate, string directory, string? outputFormat, params string?[] pins)
+        public async Task<List<CourseraResponse>> ReturnReport(int minCredit, DateTime startDate, DateTime endDate, string directory, string? outputFormat, params string[]? pins)
         {
-            var data = await _dbContext.Students
+            var students = await _dbContext.Students
                 .Include(x => x.StudentsCoursesXrefs)
                 .ThenInclude(x => x.Course)
                 .ThenInclude(x => x.Instructor)
                 .ToListAsync();
+            if (pins.Any())
+            {
+                students = students.Where(s =>pins.Any(x=>x == s.Pin)).ToList();
+            }
 
             var response = new List<CourseraResponse>();
-            foreach (var student in data)
+            foreach (var student in students)
             {
                 var courses = await GetCoursesByStudentPIN(student.Pin);
                 var entity = new CourseraResponse()
                 {
                     StudentName = $"{student.FirstName} {student.LastName}",
-                    Courses= courses,
+                    Courses = courses,
                     TotalCredit = GetCoursesTotalCredit(courses),
-            };
+                };
                 response.Add(entity);
             }
             return response;
@@ -39,8 +43,8 @@ namespace Coursera_Service
         {
             var data = await _dbContext.Courses
                 .Include(x => x.Instructor)
-                .Include(x=>x.StudentsCoursesXrefs)
-                .Where(x=>x.StudentsCoursesXrefs.Any(x=>x.StudentPin==pin)).ToListAsync();
+                .Include(x => x.StudentsCoursesXrefs)
+                .Where(x => x.StudentsCoursesXrefs.Any(x => x.StudentPin == pin)).ToListAsync();
 
             var response = new List<CourseResponse>();
 
@@ -58,7 +62,7 @@ namespace Coursera_Service
         }
         private int GetCoursesTotalCredit(List<CourseResponse> courses)
         {
-           var response = courses.Select(x => x.Credit).Sum();
+            var response = courses.Select(x => x.Credit).Sum();
             return response;
         }
     }
